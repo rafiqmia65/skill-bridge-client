@@ -1,7 +1,9 @@
+import HeroSection from "@/components/modules/HomePage/HeroSection/HeroSection";
+
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <h1>Skill Bridge app</h1>
+    <div>
+      <HeroSection />
     </div>
   );
 }
