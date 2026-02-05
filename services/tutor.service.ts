@@ -11,7 +11,10 @@ export interface Tutor {
     name: string;
     image?: string;
   };
-  categories?: { name: string }[];
+  categories?: {
+    id: string;
+    name: string;
+  }[];
 }
 
 export const tutorService = {
