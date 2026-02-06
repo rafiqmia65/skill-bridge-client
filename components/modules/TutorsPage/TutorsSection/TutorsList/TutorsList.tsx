@@ -1,17 +1,8 @@
 "use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { FiStar, FiBookOpen } from "react-icons/fi";
-
-export interface Tutor {
-  id: string;
-  bio?: string | null;
-  rating: number;
-  pricePerHr: number;
-  user: { name: string; image?: string | null };
-  categories: { id: string; name: string }[];
-}
+import { Tutor } from "@/services/tutor.service";
 
 interface Meta {
   total: number;
@@ -25,7 +16,7 @@ interface TutorsListProps {
   meta: Meta;
 }
 
-export default function TutorsList({ tutors, meta }: TutorsListProps) {
+export default function TutorsList({ tutors }: TutorsListProps) {
   if (!tutors.length)
     return <p className="text-center mt-10">No tutors found.</p>;
 
