@@ -16,6 +16,22 @@ export interface Category {
   name: string;
 }
 
+export interface Tutor {
+  id: string;
+  bio?: string | null;
+  rating: number;
+  pricePerHr: number;
+  user: { name: string; image?: string | null };
+  categories: { id: string; name: string }[];
+  availability?: {
+    id: string;
+    tutorId: string;
+    day: string;
+    startTime: string;
+    endTime: string;
+  }[];
+}
+
 export const tutorService = {
   getTutors: async (params?: Record<string, string>) => {
     try {
@@ -32,6 +48,22 @@ export const tutorService = {
         : {
             data: null,
             error: { message: data.message || "Failed to fetch tutors" },
+          };
+    } catch (err) {
+      console.error(err);
+      return { data: null, error: { message: "Something went wrong" } };
+    }
+  },
+
+  getTutorById: async (id: string) => {
+    try {
+      const res = await fetch(`${API_URL}/api/tutors/${id}`);
+      const data = await res.json();
+      return res.ok
+        ? { data: data.data, error: null } // single tutor data
+        : {
+            data: null,
+            error: { message: data.message || "Failed to fetch tutor" },
           };
     } catch (err) {
       console.error(err);
