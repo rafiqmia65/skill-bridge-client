@@ -1,20 +1,32 @@
-// services/tutor.service.ts
 import { env } from "@/env";
 
-const API_URL = env.NEXT_PUBLIC_BACKEND_API_URL;
+const API_URL = env.NEXT_PUBLIC_BACKEND_API_URL!;
 
 export interface Tutor {
   id: string;
+  bio?: string;
   pricePerHr: number;
   rating: number;
   user: {
     name: string;
-    image?: string;
+    image?: string | null;
   };
   categories?: {
     id: string;
     name: string;
   }[];
+}
+
+interface TutorApiResponse {
+  success: boolean;
+  message: string;
+  tutors: Tutor[];
+  meta?: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 }
 
 export const tutorService = {
@@ -28,8 +40,11 @@ export const tutorService = {
         });
       }
 
-      const res = await fetch(url.toString());
-      const data = await res.json();
+      const res = await fetch(url.toString(), {
+        cache: "no-store", // important
+      });
+
+      const data: TutorApiResponse = await res.json();
 
       if (!res.ok) {
         return {
@@ -40,7 +55,7 @@ export const tutorService = {
 
       return { data, error: null };
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return { data: null, error: { message: "Something went wrong" } };
     }
   },
