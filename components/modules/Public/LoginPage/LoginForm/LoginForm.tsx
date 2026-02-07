@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { authService } from "@/services/auth.service";
 
 export default function LoginForm() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -30,10 +32,14 @@ export default function LoginForm() {
         return;
       }
 
+      // Show success message
       setSuccess("Login successful! Redirecting...");
       console.log("Logged in user:", data);
 
-      // TODO: redirect to dashboard
+      // Redirect to home page after short delay
+      setTimeout(() => {
+        router.push("/");
+      }, 1200);
     } catch {
       setLoading(false);
       setError("Something went wrong");
@@ -45,7 +51,7 @@ export default function LoginForm() {
       {/* Header */}
       <div className="text-center mb-6">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-          Welcome Back 
+          Welcome Back
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
           Log in to access your SkillBridge account
