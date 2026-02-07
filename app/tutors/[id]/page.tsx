@@ -1,4 +1,4 @@
-import TutorProfilePage from "@/components/modules/TutorProfilePage/TutorProfilePage";
+import TutorProfilePage from "@/components/modules/Public/TutorProfilePage/TutorProfilePage";
 import React from "react";
 
 const page = () => {

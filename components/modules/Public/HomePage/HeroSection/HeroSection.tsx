@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import HeroImage from "../../../../public/HomePage/heroImage.jpg";
+import HeroImage from "../../../../../public/HomePage/heroImage.jpg";
 
 export default function HeroSection() {
   return (
