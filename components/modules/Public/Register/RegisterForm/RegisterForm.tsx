@@ -2,48 +2,50 @@
 
 import Link from "next/link";
 import { useState } from "react";
-
-type Role = "STUDENT" | "TUTOR";
+import { authService } from "@/services/auth.service";
+import { Role } from "@/types/auth";
 
 export default function RegisterForm() {
-  const [role, setRole] = useState<Role>("STUDENT");
+  const [role, setRole] = useState<Role>(Role.STUDENT);
   const [loading, setLoading] = useState(false);
+
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const roles: Role[] = [Role.STUDENT, Role.TUTOR];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const form = e.currentTarget;
-    const formData = new FormData(form);
+    setError(null);
+    setSuccess(null);
+
+    const formData = new FormData(e.currentTarget);
 
     const payload = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      password: formData.get("password"),
-      role, //  only role
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+      role,
     };
 
-    try {
-      setLoading(true);
+    setLoading(true);
 
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    const { data, error } = await authService.register(payload);
 
-      const data = await res.json();
+    setLoading(false);
 
-      if (!res.ok) {
-        throw new Error(data.message || "Registration failed");
-      }
+    if (error) {
+      setError(error);
+      return;
+    }
 
-      console.log("Registered user:", data);
-      // redirect / show success later
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error(String(err));
-      console.error(error.message);
-    } finally {
-      setLoading(false);
+    if (data) {
+      setSuccess(
+        "Your account has been created successfully. You can now log in.",
+      );
+      // optional: form reset
+      (e.target as HTMLFormElement).reset();
     }
   };
 
@@ -61,87 +63,93 @@ export default function RegisterForm() {
 
       {/* Role Switch */}
       <div className="flex bg-slate-100 dark:bg-slate-800 rounded-xl p-1 mb-6">
-        <button
-          type="button"
-          onClick={() => setRole("STUDENT")}
-          className={`w-1/2 py-2 rounded-lg text-sm font-semibold transition
-            ${
-              role === "STUDENT"
-                ? "bg-yellow-400 text-slate-900"
-                : "text-slate-600 dark:text-slate-300"
-            }`}
-        >
-          Student
-        </button>
-        <button
-          type="button"
-          onClick={() => setRole("TUTOR")}
-          className={`w-1/2 py-2 rounded-lg text-sm font-semibold transition
-            ${
-              role === "TUTOR"
-                ? "bg-yellow-400 text-slate-900"
-                : "text-slate-600 dark:text-slate-300"
-            }`}
-        >
-          Tutor
-        </button>
+        {roles.map((r) => (
+          <button
+            key={r}
+            type="button"
+            onClick={() => setRole(r)}
+            className={`w-1/2 py-2 rounded-lg text-sm font-semibold transition
+              ${
+                role === r
+                  ? "bg-yellow-400 text-slate-900"
+                  : "text-slate-600 dark:text-slate-300"
+              }`}
+          >
+            {r === Role.STUDENT ? "Student" : "Tutor"}
+          </button>
+        ))}
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
+          {error}
+        </div>
+      )}
+
+      {/* Success Message */}
+      {success && (
+        <div className="mb-4 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
+          <p className="font-medium">Account created successfully 🎉</p>
+          <p className="mt-1">
+            You can now{" "}
+            <Link
+              href="/login"
+              className="text-green-700 font-semibold underline"
+            >
+              login
+            </Link>{" "}
+            with your credentials.
+          </p>
+        </div>
+      )}
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Full Name
-          </label>
+          <label className="block text-sm font-medium">Full Name</label>
           <input
             name="name"
             type="text"
             required
-            className="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent px-4 py-2 focus:ring-2 focus:ring-yellow-400"
+            className="mt-1 w-full rounded-lg border px-4 py-2 focus:ring-2 focus:ring-yellow-400"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Email
-          </label>
+          <label className="block text-sm font-medium">Email</label>
           <input
             name="email"
             type="email"
             required
-            className="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent px-4 py-2 focus:ring-2 focus:ring-yellow-400"
+            className="mt-1 w-full rounded-lg border px-4 py-2 focus:ring-2 focus:ring-yellow-400"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Password
-          </label>
+          <label className="block text-sm font-medium">Password</label>
           <input
             name="password"
             type="password"
-            required
             minLength={6}
-            className="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-transparent px-4 py-2 focus:ring-2 focus:ring-yellow-400"
+            required
+            className="mt-1 w-full rounded-lg border px-4 py-2 focus:ring-2 focus:ring-yellow-400"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-semibold py-2.5 rounded-lg transition shadow-md disabled:opacity-60"
+          className="w-full bg-yellow-400 hover:bg-yellow-500 py-2.5 rounded-lg font-semibold disabled:opacity-60"
         >
           {loading ? "Creating account..." : `Register as ${role}`}
         </button>
       </form>
 
       {/* Footer */}
-      <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-6">
+      <p className="text-center text-sm text-slate-500 mt-6">
         Already have an account?{" "}
-        <Link
-          href="/login"
-          className="text-yellow-500 font-medium hover:underline"
-        >
+        <Link href="/login" className="text-yellow-500 font-medium">
           Login
         </Link>
       </p>
