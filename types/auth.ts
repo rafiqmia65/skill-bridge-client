@@ -1,5 +1,3 @@
-// src/types/auth.ts
-
 export enum Role {
   ADMIN = "ADMIN",
   STUDENT = "STUDENT",
