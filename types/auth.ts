@@ -1,3 +1,5 @@
+import { RoleType } from "@/constants/roles";
+
 export enum Role {
   STUDENT = "STUDENT",
   TUTOR = "TUTOR",
@@ -34,3 +36,11 @@ export interface AuthResponse {
   token: string;
   user: User;
 }
+
+export type AuthUser = {
+  id: string;
+  email: string;
+  name: string;
+  role?: RoleType;
+  image?: string | null;
+};

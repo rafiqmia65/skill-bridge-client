@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { RoleType, role } from "@/constants/roles";
+import { role } from "@/constants/roles";
 import { NavLink, MobileLink, UserMenu } from "@/helper/navbarHelpers";
 import {
   FaSignInAlt,
@@ -13,22 +13,16 @@ import {
   FaBars,
 } from "react-icons/fa";
 import { ModeToggle } from "../ModeToggle/ModeToggle";
+import { AuthUser } from "@/types/auth";
 
 // User type with optional role and image
-type UserWithRole = {
-  id: string;
-  name: string;
-  email: string;
-  role?: RoleType;
-  image?: string | null;
-};
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false); // Mobile menu toggle state
   const pathname = usePathname(); // Current route for active link highlight
 
   const { data: sessionData, isPending } = authClient.useSession(); // Auth session
-  const user = sessionData?.user as UserWithRole | undefined; // Cast to UserWithRole
+  const user = sessionData?.user as AuthUser | undefined; // Cast to UserWithRole
 
   // Logout handler
   const handleLogout = async () => await authClient.signOut();
