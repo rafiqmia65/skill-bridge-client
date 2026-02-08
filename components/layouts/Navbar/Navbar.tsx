@@ -1,159 +1,93 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { NavLink, MobileLink, UserMenu } from "@/helper/navbarHelpers";
 import Link from "next/link";
-import { useState } from "react";
-import { ModeToggle } from "../ModeToggle/ModeToggle";
-
-type Role = "STUDENT" | "TUTOR" | "ADMIN" | null;
+import { authClient } from "@/lib/auth-client";
+import { Role } from "@/types/auth";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<{ name: string; role: Role } | null>(null);
 
-  // later: replace with real auth state
-  const isLoggedIn = false;
-  const userRole: Role = null;
+  useEffect(() => {
+    const session = authClient.getSession();
+    if (session?.user)
+      setUser({ name: session.user.name, role: session.user.role });
+  }, []);
+
+  const handleLogout = () => {
+    authClient.signOut();
+    setUser(null);
+  };
 
   return (
-    <nav className="sticky top-0 z-50 border-b bg-background">
+    <nav className="sticky top-0 z-50 border-b bg-white dark:bg-slate-900 shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-        {/* Left: Logo */}
         <Link
           href="/"
-          className="text-xl font-bold tracking-tight text-foreground"
+          className="text-xl font-bold text-slate-900 dark:text-white"
         >
           Skill<span className="text-yellow-400">Bridge</span>
         </Link>
 
-        {/* Center: Desktop Menu */}
-        <div className="hidden items-center gap-8 md:flex">
+        {/* Desktop */}
+        <div className="hidden md:flex gap-6 items-center">
           <NavLink href="/">Home</NavLink>
           <NavLink href="/tutors">Tutors</NavLink>
-
-          {!isLoggedIn ? (
+          {!user ? (
             <>
               <NavLink href="/login">Login</NavLink>
-
               <Link
                 href="/register"
-                className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
+                className="bg-yellow-400 px-4 py-2 rounded-lg font-semibold text-slate-900"
               >
                 Register
               </Link>
             </>
           ) : (
-            <UserMenu role={userRole} />
+            <UserMenu
+              name={user.name}
+              role={user.role}
+              onLogout={handleLogout}
+            />
           )}
         </div>
 
-        {/* Right: Mode toggle + Mobile button */}
-        <div className="flex items-center gap-2">
-          <ModeToggle />
-
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="rounded-md p-2 text-muted-foreground hover:bg-accent md:hidden"
-            aria-label="Toggle menu"
-          >
-            ☰
-          </button>
-        </div>
+        {/* Mobile */}
+        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2">
+          ☰
+        </button>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
-        <div className="border-t bg-background px-4 py-4 md:hidden">
-          <div className="flex flex-col gap-4">
-            <MobileLink href="/" onClick={() => setIsOpen(false)}>
-              Home
-            </MobileLink>
-
-            <MobileLink href="/tutors" onClick={() => setIsOpen(false)}>
-              Tutors
-            </MobileLink>
-
-            {!isLoggedIn ? (
-              <>
-                <MobileLink href="/login" onClick={() => setIsOpen(false)}>
-                  Login
-                </MobileLink>
-
-                <MobileLink href="/register" onClick={() => setIsOpen(false)}>
-                  Register
-                </MobileLink>
-              </>
-            ) : (
-              <UserMenu role={userRole} />
-            )}
-          </div>
+        <div className="md:hidden px-4 py-4 border-t flex flex-col gap-2">
+          <MobileLink href="/" onClick={() => setIsOpen(false)}>
+            Home
+          </MobileLink>
+          <MobileLink href="/tutors" onClick={() => setIsOpen(false)}>
+            Tutors
+          </MobileLink>
+          {!user ? (
+            <>
+              <MobileLink href="/login" onClick={() => setIsOpen(false)}>
+                Login
+              </MobileLink>
+              <MobileLink href="/register" onClick={() => setIsOpen(false)}>
+                Register
+              </MobileLink>
+            </>
+          ) : (
+            <UserMenu
+              name={user.name}
+              role={user.role}
+              onLogout={handleLogout}
+              mobile
+              onClickClose={() => setIsOpen(false)}
+            />
+          )}
         </div>
       )}
     </nav>
-  );
-}
-
-/* ---------------- helpers ---------------- */
-
-function NavLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className="font-medium text-muted-foreground hover:text-foreground transition-colors"
-    >
-      {children}
-    </Link>
-  );
-}
-
-function MobileLink({
-  href,
-  children,
-  onClick,
-}: {
-  href: string;
-  children: React.ReactNode;
-  onClick: () => void;
-}) {
-  return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className="rounded-md px-2 py-2 font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
-    >
-      {children}
-    </Link>
-  );
-}
-
-/**
- * Logged-in user menu
- * Role-based dashboard routing
- */
-function UserMenu({ role }: { role: Role }) {
-  const dashboardRoute =
-    role === "ADMIN"
-      ? "/admin"
-      : role === "TUTOR"
-        ? "/tutor/dashboard"
-        : "/dashboard";
-
-  return (
-    <div className="flex items-center gap-4">
-      <Link
-        href={dashboardRoute}
-        className="font-medium text-muted-foreground hover:text-foreground"
-      >
-        Dashboard
-      </Link>
-
-      <button className="rounded-md border border-destructive/30 px-3 py-1 text-sm font-medium text-destructive hover:bg-destructive/10">
-        Logout
-      </button>
-    </div>
   );
 }

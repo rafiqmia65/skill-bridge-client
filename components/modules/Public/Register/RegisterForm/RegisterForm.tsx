@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import toast from "react-hot-toast";
+
 import { authService } from "@/services/auth.service";
 import { Role } from "@/types/auth";
 
@@ -9,16 +11,10 @@ export default function RegisterForm() {
   const [role, setRole] = useState<Role>(Role.STUDENT);
   const [loading, setLoading] = useState(false);
 
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-
   const roles: Role[] = [Role.STUDENT, Role.TUTOR];
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    setError(null);
-    setSuccess(null);
 
     const formData = new FormData(e.currentTarget);
 
@@ -31,20 +27,20 @@ export default function RegisterForm() {
 
     setLoading(true);
 
+    const toastId = toast.loading("Creating your account...");
+
     const { data, error } = await authService.register(payload);
 
     setLoading(false);
+    toast.dismiss(toastId);
 
     if (error) {
-      setError(error);
+      toast.error(error);
       return;
     }
 
     if (data) {
-      setSuccess(
-        "Your account has been created successfully. You can now log in.",
-      );
-      // optional: form reset
+      toast.success("Account created successfully 🎉");
       (e.target as HTMLFormElement).reset();
     }
   };
@@ -79,30 +75,6 @@ export default function RegisterForm() {
           </button>
         ))}
       </div>
-
-      {/* Error Message */}
-      {error && (
-        <div className="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
-          {error}
-        </div>
-      )}
-
-      {/* Success Message */}
-      {success && (
-        <div className="mb-4 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
-          <p className="font-medium">Account created successfully 🎉</p>
-          <p className="mt-1">
-            You can now{" "}
-            <Link
-              href="/login"
-              className="text-green-700 font-semibold underline"
-            >
-              login
-            </Link>{" "}
-            with your credentials.
-          </p>
-        </div>
-      )}
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
