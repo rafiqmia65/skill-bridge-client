@@ -1,7 +1,9 @@
+import Statistics from "@/components/modules/admin/Statistics/Statistics";
+
 export default function AdminDashboard() {
   return (
-    <div>
-      <h1> Admin Dashboard </h1>
-    </div>
+    <>
+      <Statistics />
+    </>
   );
 }
