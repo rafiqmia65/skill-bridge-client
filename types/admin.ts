@@ -1,11 +1,11 @@
 import { RoleType } from "@/constants/roles";
 
 export interface AdminUser {
-  _id: string;
+  id: string;
   name: string;
   email: string;
   role: RoleType;
-  isBanned: boolean; // backend returns string, but we can convert it to boolean on frontend
+  isBanned: boolean;
 }
 
 export interface Booking {

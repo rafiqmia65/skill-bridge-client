@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import type { AdminUser } from "@/types/admin";
 import UserTable from "./UserTable/UserTable";
 import { adminUserService } from "@/services/admin/adminUser.service";
@@ -8,15 +9,16 @@ import { authClient } from "@/lib/auth-client";
 
 export default function AdminUsersPage() {
   const session = authClient.useSession();
-  const token = session?.data?.session?.token;
+  const token = session?.data?.session?.token ?? "";
 
+  // IMPORTANT: default empty array
   const [users, setUsers] = useState<AdminUser[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!token) {
-      setError("You are not authorized to view this page.");
+      setError("Unauthorized access");
       setLoading(false);
       return;
     }
@@ -25,15 +27,14 @@ export default function AdminUsersPage() {
       try {
         const data = await adminUserService.getAllUsers({ token });
 
-        // map isBanned boolean to frontend status
-        const mappedUsers = data.map((u) => ({
-          ...u,
-          status: u.isBanned ? "BANNED" : "ACTIVE",
-        }));
-
-        setUsers(mappedUsers);
-      } catch (err: any) {
-        setError(err.message);
+        // extra safety
+        setUsers(Array.isArray(data) ? data : []);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Failed to fetch users");
+        }
       } finally {
         setLoading(false);
       }
@@ -45,39 +46,44 @@ export default function AdminUsersPage() {
   const toggleStatus = async (userId: string) => {
     if (!token) return;
 
+    const currentUser = users.find((u) => u.id === userId);
+    if (!currentUser) return;
+
+    const newStatus = currentUser.isBanned ? "ACTIVE" : "BANNED";
+
     try {
-      const updated = await adminUserService.updateUserStatus(userId, {
+      const res = await adminUserService.updateUserStatus(userId, {
         token,
+        status: newStatus,
       });
 
-      // updated.status is "ACTIVE" | "BANNED"
-      setUsers((prev) =>
-        prev.map((u) =>
-          u._id === userId
-            ? {
-                ...u,
-                status: updated.status,
-                isBanned: updated.status === "BANNED",
-              }
-            : u,
-        ),
-      );
-    } catch (err: any) {
-      alert(err.message);
+      setUsers((prev) => prev.map((u) => (u.id === userId ? res : u)));
+
+      toast.success(`User is now ${res.isBanned ? "BANNED" : "ACTIVE"}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Failed to update user");
+      }
     }
   };
 
-  if (loading)
-    return (
-      <div className="text-gray-500 dark:text-gray-400">Loading users...</div>
-    );
-  if (error) return <div className="text-red-500">{error}</div>;
+  if (loading) {
+    return <p className="text-gray-500 dark:text-gray-400">Loading users...</p>;
+  }
+
+  if (error) {
+    return <p className="text-red-500">{error}</p>;
+  }
 
   return (
     <div className="p-6 bg-white dark:bg-gray-900 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">
+      <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">
         Admin Users
       </h1>
+
+      {/* users ALWAYS array */}
       <UserTable users={users} onToggleStatus={toggleStatus} />
     </div>
   );

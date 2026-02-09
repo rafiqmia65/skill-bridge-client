@@ -24,18 +24,20 @@ export const adminUserService = {
 
   updateUserStatus: async (
     userId: string,
-    options: Options,
-  ): Promise<{ status: "ACTIVE" | "BANNED" }> => {
+    options: Options & { status: "ACTIVE" | "BANNED" },
+  ): Promise<AdminUser> => {
     const res = await fetch(`${API_URL}/api/admin/users/${userId}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${options.token}`,
         "Content-Type": "application/json",
       },
+      body: JSON.stringify({ status: options.status }),
       credentials: "include",
     });
 
     if (!res.ok) throw new Error("Failed to update status");
-    return res.json();
+    const data = await res.json();
+    return data.data;
   },
 };
