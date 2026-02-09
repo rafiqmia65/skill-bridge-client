@@ -5,7 +5,7 @@ export interface AdminUser {
   name: string;
   email: string;
   role: RoleType;
-  status: "ACTIVE" | "BANNED";
+  isBanned: boolean; // backend returns string, but we can convert it to boolean on frontend
 }
 
 export interface Booking {

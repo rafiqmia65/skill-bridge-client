@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { adminOverviewService } from "@/services/adminOverview.service";
+import { adminOverviewService } from "@/services/admin/adminOverview.service";
 import StatCard from "./StatCard/StatCard";
 import RecentBookings from "./RecentBookings/RecentBookings";
 import { authClient } from "@/lib/auth-client";
