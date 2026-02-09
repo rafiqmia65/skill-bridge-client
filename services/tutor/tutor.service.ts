@@ -28,6 +28,16 @@ export interface Tutor {
   }[];
 }
 
+export interface Slot {
+  day: string;
+  startTime: string;
+  endTime: string;
+}
+
+export interface AvailabilityResponse {
+  slots: Slot[];
+}
+
 export const tutorService = {
   getTutors: async (params?: Record<string, string>) => {
     try {
@@ -95,5 +105,30 @@ export const tutorService = {
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Failed to update profile");
     return data;
+  },
+
+  // UPDATE availability
+  updateAvailability: async (
+    token: string,
+    payload: { slots: Slot[] },
+  ): Promise<AvailabilityResponse> => {
+    try {
+      const res = await fetch(`${API_URL}/api/tutor/availability`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok)
+        throw new Error(data.message || "Failed to update availability");
+      return data;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   },
 };
