@@ -1,5 +1,3 @@
-"use client";
-
 import type { Booking } from "@/types/admin";
 
 interface Props {
@@ -57,7 +55,6 @@ export default function BookingTable({ bookings = [] }: Props) {
                     {booking.status}
                   </span>
                 </td>
-
               </tr>
             ))
           )}

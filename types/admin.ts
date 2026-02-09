@@ -33,8 +33,9 @@ export interface Booking {
 }
 
 export interface Category {
-  _id: string;
+  id: string;
   name: string;
+  createdAt: string;
 }
 
 export interface AdminOverviewResponse {
