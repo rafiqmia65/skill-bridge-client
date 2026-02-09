@@ -47,7 +47,7 @@ export default function BookingTable({ bookings = [] }: Props) {
                 </td>
 
                 <td className="px-4 py-2">
-                  ৳{booking.tutorProfile.pricePerHr}
+                  ${booking.tutorProfile.pricePerHr}
                 </td>
 
                 <td className="px-4 py-2">

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { FiStar, FiBookOpen } from "react-icons/fi";
-import { Tutor } from "@/services/tutor.service";
+import { Tutor } from "@/services/tutor/tutor.service";
 
 interface Props {
   tutor: Tutor;

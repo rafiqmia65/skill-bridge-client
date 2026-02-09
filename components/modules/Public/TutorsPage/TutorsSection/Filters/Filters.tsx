@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { tutorService, Category } from "@/services/tutor.service";
+import { tutorService, Category } from "@/services/tutor/tutor.service";
 
 interface FiltersProps {
   onFilterChange: (filters: Record<string, string>) => void;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { tutorService, Tutor } from "@/services/tutor.service";
+import { tutorService, Tutor } from "@/services/tutor/tutor.service";
 import Image from "next/image";
 import { FiSearch, FiStar, FiBookOpen, FiUser } from "react-icons/fi";
 

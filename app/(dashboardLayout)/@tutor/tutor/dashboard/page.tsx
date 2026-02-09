@@ -1,7 +1,12 @@
+
 import React from "react";
 
 const page = () => {
-  return <div>tutor dashboard</div>;
+  return (
+    <>
+      tutor Dashboard
+    </>
+  );
 };
 
 export default page;

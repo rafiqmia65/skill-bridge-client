@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FiStar, FiBookOpen } from "react-icons/fi";
-import { tutorService, Tutor } from "@/services/tutor.service";
+import { tutorService, Tutor } from "@/services/tutor/tutor.service";
 
 const truncate = (text: string, limit = 50) =>
   text.length > limit ? text.slice(0, limit) + "…" : text;

@@ -9,7 +9,7 @@ import { authClient } from "@/lib/auth-client";
 
 export default function AdminUsersPage() {
   const session = authClient.useSession();
-  const token = session?.data?.session?.token ?? "";
+  const token = session?.data?.session?.token;
 
   // IMPORTANT: default empty array
   const [users, setUsers] = useState<AdminUser[]>([]);

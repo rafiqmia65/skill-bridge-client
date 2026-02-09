@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Filters from "./Filters/Filters";
 import TutorsList from "./TutorsList/TutorsList";
 import Pagination from "./Pagination/Pagination";
-import { tutorService, Tutor } from "@/services/tutor.service";
+import { tutorService, Tutor } from "@/services/tutor/tutor.service";
 
 interface Meta {
   total: number;

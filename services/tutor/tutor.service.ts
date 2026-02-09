@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { Category } from "@/types/admin";
 
 const API_URL = env.NEXT_PUBLIC_BACKEND_API_URL!;
 
@@ -9,11 +10,6 @@ export interface Tutor {
   pricePerHr: number;
   user: { name: string; image?: string | null };
   categories: { id: string; name: string }[];
-}
-
-export interface Category {
-  id: string;
-  name: string;
 }
 
 export interface Tutor {
@@ -80,5 +76,24 @@ export const tutorService = {
       console.error(err);
       return [];
     }
+  },
+
+  updateTutorProfile: async (
+    token: string,
+    payload: { bio: string; pricePerHr: number; categoryIds: string[] },
+  ) => {
+    const res = await fetch(`${API_URL}/api/tutor/profile`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: "include",
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Failed to update profile");
+    return data;
   },
 };

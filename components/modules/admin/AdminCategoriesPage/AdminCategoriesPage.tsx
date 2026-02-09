@@ -9,7 +9,7 @@ import CategoryTable from "./CategoryTable/CategoryTable";
 
 export default function AdminCategoriesPage() {
   const session = authClient.useSession();
-  const token = session?.data?.session?.token ?? "";
+  const token = session?.data?.session?.token;
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [name, setName] = useState("");

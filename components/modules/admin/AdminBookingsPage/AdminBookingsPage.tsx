@@ -8,7 +8,7 @@ import BookingTable from "./BookingTable/BookingTable";
 
 export default function AdminBookingsPage() {
   const session = authClient.useSession();
-  const token = session?.data?.session?.token ?? "";
+  const token = session?.data?.session?.token;
 
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);

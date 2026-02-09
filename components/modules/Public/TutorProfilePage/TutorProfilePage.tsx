@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { tutorService, Tutor } from "@/services/tutor.service";
+import { tutorService, Tutor } from "@/services/tutor/tutor.service";
 import TutorHeader from "./TutorHeader/TutorHeader";
 import AvailabilityTable from "./AvailabilityTable/AvailabilityTable";
 import ReviewsSection from "./ReviewsSection/ReviewsSection";

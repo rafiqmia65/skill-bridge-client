@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FiStar, FiBookOpen } from "react-icons/fi";
-import { Tutor } from "@/services/tutor.service";
+import { Tutor } from "@/services/tutor/tutor.service";
 
 interface Meta {
   total: number;
