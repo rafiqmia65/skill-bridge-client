@@ -1,9 +1,12 @@
-import React from 'react'
+import StudentProfilePage from "@/components/modules/student/StudentProfilePage/StudentProfilePage";
+import React from "react";
 
 const page = () => {
   return (
-    <div>student dashboard</div>
-  )
-}
+    <>
+      <StudentProfilePage />
+    </>
+  );
+};
 
-export default page
+export default page;
