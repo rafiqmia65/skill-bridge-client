@@ -3,15 +3,7 @@ import { Category } from "@/types/admin";
 
 const API_URL = env.NEXT_PUBLIC_BACKEND_API_URL!;
 
-export interface Tutor {
-  id: string;
-  bio?: string | null;
-  rating: number;
-  pricePerHr: number;
-  user: { name: string; image?: string | null };
-  categories: { id: string; name: string }[];
-}
-
+// Tutor type representing a tutor's basic profile
 export interface Tutor {
   id: string;
   bio?: string | null;
@@ -20,6 +12,7 @@ export interface Tutor {
   user: { name: string; image?: string | null };
   categories: { id: string; name: string }[];
   availability?: {
+    // optional availability slots
     id: string;
     tutorId: string;
     day: string;
@@ -28,17 +21,20 @@ export interface Tutor {
   }[];
 }
 
+// Availability slot structure
 export interface Slot {
   day: string;
   startTime: string;
   endTime: string;
 }
 
+// Response type for availability update
 export interface AvailabilityResponse {
   slots: Slot[];
 }
 
 export const tutorService = {
+  // Fetch list of tutors, optional query parameters
   getTutors: async (params?: Record<string, string>) => {
     try {
       const url = new URL(`${API_URL}/api/tutors`);
@@ -61,12 +57,13 @@ export const tutorService = {
     }
   },
 
+  // Fetch a single tutor by ID
   getTutorById: async (id: string) => {
     try {
       const res = await fetch(`${API_URL}/api/tutors/${id}`);
       const data = await res.json();
       return res.ok
-        ? { data: data.data, error: null } // single tutor data
+        ? { data: data.data, error: null } // return tutor data
         : {
             data: null,
             error: { message: data.message || "Failed to fetch tutor" },
@@ -77,6 +74,7 @@ export const tutorService = {
     }
   },
 
+  // Fetch all categories
   getCategories: async (): Promise<Category[]> => {
     try {
       const res = await fetch(`${API_URL}/api/categories`);
@@ -88,6 +86,7 @@ export const tutorService = {
     }
   },
 
+  // Update tutor profile: bio, hourly price, categories
   updateTutorProfile: async (
     token: string,
     payload: { bio: string; pricePerHr: number; categoryIds: string[] },
@@ -107,7 +106,7 @@ export const tutorService = {
     return data;
   },
 
-  // UPDATE availability
+  // Update tutor availability slots
   updateAvailability: async (
     token: string,
     payload: { slots: Slot[] },
@@ -126,6 +125,26 @@ export const tutorService = {
       if (!res.ok)
         throw new Error(data.message || "Failed to update availability");
       return data;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  },
+
+  // Fetch tutor dashboard data (profile, stats, sessions, reviews)
+  getDashboard: async (token: string) => {
+    try {
+      const res = await fetch(`${API_URL}/api/tutor/dashboard`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to fetch dashboard");
+
+      return data.data; // structured dashboard data
     } catch (err) {
       console.error(err);
       throw err;
