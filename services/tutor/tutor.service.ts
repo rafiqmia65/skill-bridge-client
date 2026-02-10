@@ -6,19 +6,16 @@ const API_URL = env.NEXT_PUBLIC_BACKEND_API_URL!;
 // Tutor type representing a tutor's basic profile
 export interface Tutor {
   id: string;
-  bio?: string | null;
+  user: {
+    id: string;
+    name: string;
+    image?: string | null;
+  };
   rating: number;
   pricePerHr: number;
-  user: { name: string; image?: string | null };
-  categories: { id: string; name: string }[];
-  availability?: {
-    // optional availability slots
-    id: string;
-    tutorId: string;
-    day: string;
-    startTime: string;
-    endTime: string;
-  }[];
+  categories?: { id: string; name: string }[];
+  experience?: string; // optional
+  totalReviews?: number; // optional
 }
 
 // Availability slot structure
