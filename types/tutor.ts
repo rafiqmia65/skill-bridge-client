@@ -50,3 +50,17 @@ export interface TutorDashboardData {
   recentSessions: Session[];
   reviews: Review[];
 }
+
+export interface Tutor {
+  id: string;
+  user: {
+    id: string;
+    name: string;
+    image?: string | null;
+  };
+  rating: number;
+  pricePerHr: number;
+  categories?: { id: string; name: string }[];
+  experience?: string; // optional
+  totalReviews?: number; // optional
+}

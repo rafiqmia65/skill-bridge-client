@@ -14,8 +14,7 @@ export interface Tutor {
   rating: number;
   pricePerHr: number;
   categories?: { id: string; name: string }[];
-  experience?: string; // optional
-  totalReviews?: number; // optional
+  bio?: string;
 }
 
 // Availability slot structure
