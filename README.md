@@ -1,36 +1,207 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SkillBridge Frontend 🎓
 
-## Getting Started
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![React](https://img.shields.io/badge/React-18.2.0-blue)](https://reactjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-14.2.0-black)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.3.3-teal)](https://tailwindcss.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.2-blueviolet)](https://www.typescriptlang.org/)
 
-First, run the development server:
+---
+
+## 🌟 Project Overview
+
+**SkillBridge** is a modern, full-stack tutoring platform frontend built with **Next.js**, **Tailwind CSS**, and **TypeScript**.  
+It allows students to browse tutors, book sessions, and manage their dashboard. Tutors can manage profiles, availability, and sessions. Admins can oversee users and bookings.
+
+---
+
+## 📌 Features
+
+### Public Features
+
+- Browse and search tutors by subjects, rating, and price
+- Filter tutors by category
+- View tutor profiles with details and reviews
+- Landing page with featured tutors
+
+### Student Features
+
+- Register/login as student
+- Book tutoring sessions
+- View upcoming and past bookings
+- Leave reviews
+- Manage profile
+
+### Tutor Features
+
+- Register/login as tutor
+- Create/update tutor profile
+- Set availability slots
+- View teaching sessions and ratings
+
+### Admin Features
+
+- View all users (students and tutors)
+- Manage user status (ban/unban)
+- View all bookings
+- Manage categories
+
+---
+
+## 🗂️ Pages & Routes
+
+### Public Routes
+
+| Route         | Page          | Description                   |
+| ------------- | ------------- | ----------------------------- |
+| `/`           | Home          | Hero, search, featured tutors |
+| `/tutors`     | Browse Tutors | List with filters             |
+| `/tutors/:id` | Tutor Profile | Details, reviews, book        |
+| `/login`      | Login         | User login form               |
+| `/register`   | Register      | User registration form        |
+
+### Student Routes (Private)
+
+| Route                 | Page        | Description        |
+| --------------------- | ----------- | ------------------ |
+| `/dashboard`          | Dashboard   | Overview, bookings |
+| `/dashboard/bookings` | My Bookings | Booking history    |
+| `/dashboard/profile`  | Profile     | Edit student info  |
+
+### Tutor Routes (Private)
+
+| Route                 | Page         | Description     |
+| --------------------- | ------------ | --------------- |
+| `/tutor/dashboard`    | Dashboard    | Sessions, stats |
+| `/tutor/availability` | Availability | Set time slots  |
+| `/tutor/profile`      | Profile      | Edit tutor info |
+
+### Admin Routes (Private)
+
+| Route               | Page       | Description       |
+| ------------------- | ---------- | ----------------- |
+| `/admin`            | Dashboard  | Statistics        |
+| `/admin/users`      | Users      | Manage users      |
+| `/admin/bookings`   | Bookings   | All bookings      |
+| `/admin/categories` | Categories | Manage categories |
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 14, React 18, TypeScript
+- **Styling**: Tailwind CSS 3
+- **State Management**: React Query / TanStack Query
+- **Authentication**: JWT + Firebase (or backend session)
+- **HTTP Requests**: Fetch API / Axios
+- **Icons**: Lucide / Heroicons
+- **Form Handling**: React Hook Form
+- **Notifications**: react-hot-toast
+- **Animations**: Tailwind + Framer Motion
+
+---
+
+## 🔗 API Integration
+
+### Endpoints Used
+
+- **Auth**: `/api/auth/register`, `/api/auth/login`, `/api/auth/me`
+- **Tutors**: `/api/tutors`, `/api/tutors/:id`, `/api/categories`
+- **Bookings**: `/api/bookings`, `/api/bookings/:id`
+- **Student Profile**: `/api/student/profile`, `/api/student/updateProfile`
+- **Tutor Management**: `/api/tutor/profile`, `/api/tutor/availability`
+- **Reviews**: `/api/reviews`
+
+> All API requests include **Authorization header** with bearer token and use **credentials: include** for cookies.
+
+---
+
+## ⚙️ Setup & Installation
+
+1. **Clone repository**
+
+```bash
+git clone https://github.com/rafiqmia65/skill-bridge-client.git
+cd skill-bridge-client
+```
+
+````
+
+2. **Install dependencies**
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. **Create `.env.local`**
+
+```env
+NEXT_PUBLIC_BACKEND_API_URL=http://localhost:5000
+```
+
+4. **Run dev server**
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. **Open in browser**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 💡 Conventions & Best Practices
 
-To learn more about Next.js, take a look at the following resources:
+- **Typescript interfaces** for API responses (`StudentProfile`, `Booking`, `TutorProfile`)
+- **Service layer** for API calls (`studentProfileService`, `bookingService`)
+- **Reusable components** for loading, error, profile cards, tables
+- **Next.js Default fetch system** for data fetching and caching
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📦 Project Structure
 
-## Deploy on Vercel
+```
+/app
+  /dashboard
+    page.tsx
+    ProfileCard/
+    BookingsTable/
+  /tutors
+    [id].tsx
+/services
+  student/
+    studentProfile.service.ts
+  booking/
+    booking.service.ts
+/components
+  common/
+    LoadingPage.tsx
+    ErrorPage.tsx
+/public
+  default-avatar.png
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🌟 Contributing
+
+1. Fork the repository
+2. Create a branch: `git checkout -b feature/your-feature`
+3. Commit changes: `git commit -m "Add feature"`
+4. Push: `git push origin feature/your-feature`
+5. Create a Pull Request
+
+---
+
+## 📄 License
+
+[MIT License](LICENSE)
+````
