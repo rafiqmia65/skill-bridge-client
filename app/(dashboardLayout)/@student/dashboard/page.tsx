@@ -1,9 +1,12 @@
-import React from 'react'
+import StudentOverviewPage from "@/components/modules/student/StudentOverviewPage/StudentOverviewPage";
+import React from "react";
 
 const page = () => {
   return (
-    <div>page</div>
-  )
-}
+    <>
+      <StudentOverviewPage />
+    </>
+  );
+};
 
-export default page
+export default page;
