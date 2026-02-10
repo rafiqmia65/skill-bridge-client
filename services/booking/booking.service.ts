@@ -16,16 +16,13 @@ export interface TutorAvailability {
   endTime: string;
 }
 
-export interface Tutor {
-  id: string; 
+export interface TutorProfile {
+  id: string;
   user: User;
   bio?: string;
   pricePerHr?: number;
   rating: number;
-  availability?: TutorAvailability[];
   categories?: Category[];
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface Booking {
@@ -35,22 +32,21 @@ export interface Booking {
   date: string;
   status: "CONFIRMED" | "COMPLETED" | "CANCELLED";
   tutorProfileId?: string;
+  tutorProfile?: TutorProfile;
 }
 
 const API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
+/**
+ * Booking service for frontend API calls
+ */
 export const bookingService = {
+  // Create a new booking
   createBooking: async (
     token: string,
     tutorProfileId: string,
     date: string,
   ): Promise<Booking> => {
-    const body = { tutorProfileId, date };
-
-    // 🔹 Debug: console log always
-    console.log("Booking request body:", body);
-    console.log("Token:", token);
-
     const res = await fetch(`${API_URL}/api/bookings`, {
       method: "POST",
       headers: {
@@ -58,16 +54,47 @@ export const bookingService = {
         Authorization: `Bearer ${token}`,
       },
       credentials: "include",
-      body: JSON.stringify(body),
+      body: JSON.stringify({ tutorProfileId, date }),
     });
 
-    console.log("Raw response status:", res.status);
-    console.log("Raw response ok:", res.ok);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Booking failed");
+
+    return data.data as Booking;
+  },
+
+  // Get all bookings of logged-in student
+  getMyBookings: async (token: string): Promise<Booking[]> => {
+    const res = await fetch(`${API_URL}/api/bookings`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: "include",
+    });
 
     const data = await res.json();
-    console.log("Booking response data:", data);
+    if (!res.ok) throw new Error(data.message || "Failed to fetch bookings");
 
-    if (!res.ok) throw new Error(data.message || "Booking failed");
+    return data.data as Booking[];
+  },
+
+  // Get a single booking by ID
+  getBookingById: async (
+    token: string,
+    bookingId: string,
+  ): Promise<Booking> => {
+    const res = await fetch(`${API_URL}/api/bookings/${bookingId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: "include",
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Failed to fetch booking");
+
     return data.data as Booking;
   },
 };
