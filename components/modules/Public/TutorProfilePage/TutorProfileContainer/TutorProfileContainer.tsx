@@ -31,19 +31,41 @@ export default function TutorProfileContainer({ token }: Props) {
     if (tutorId) fetchTutor();
   }, [tutorId]);
 
-  if (loading) return <p className="text-center mt-32">Loading...</p>;
-  if (error || !tutor)
+  if (loading) {
     return (
-      <p className="text-center mt-32 text-red-500">
-        {error || "Tutor not found"}
-      </p>
+      <div className="container mx-auto px-4 py-16">
+        <div className="animate-pulse space-y-8">
+          <div className="h-48 bg-gray-100 dark:bg-gray-800 rounded-lg" />
+          <div className="h-64 bg-gray-100 dark:bg-gray-800 rounded-lg" />
+          <div className="h-32 bg-gray-100 dark:bg-gray-800 rounded-lg" />
+        </div>
+      </div>
     );
+  }
+
+  if (error || !tutor) {
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <p className="text-red-500 dark:text-red-400">
+          {error || "Tutor not found"}
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto px-4 py-16 space-y-12">
-      <TutorHeader tutor={tutor} token={token} />
-      <AvailabilityTable availability={tutor.availability ?? []} />
-      <ReviewsSection />
-    </div>
+    <section
+      className="relative overflow-hidden 
+                 bg-linear-to-br from-yellow-50 via-white to-yellow-100 
+                 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800"
+    >
+      <div className="container mx-auto px-4 py-12 max-w-6xl">
+        <div className="space-y-8">
+          <TutorHeader tutor={tutor} token={token} />
+          <AvailabilityTable availability={tutor.availability ?? []} />
+          <ReviewsSection />
+        </div>
+      </div>
+    </section>
   );
 }

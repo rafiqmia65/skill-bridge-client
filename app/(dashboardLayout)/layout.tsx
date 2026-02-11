@@ -22,29 +22,33 @@ export default function DashboardLayout({
   tutor: ReactNode;
   student: ReactNode;
 }) {
-  const { data: sessionData } = authClient.useSession(); // Auth session
-  const user = sessionData?.user as AuthUser; // Cast to UserWithRole
+  const { data: sessionData } = authClient.useSession();
+  const user = sessionData?.user as AuthUser;
 
   return (
     <SidebarProvider>
       <AppSidebar user={user} />
 
       <SidebarInset>
-        <header className="flex h-16 items-center justify-between gap-2 border-b px-4">
-          <SidebarTrigger />
+        {/* Simple Header */}
+        <header className="flex h-14 items-center justify-between border-b border-gray-200 dark:border-gray-800 px-4 bg-white dark:bg-gray-950">
+          <div className="flex items-center gap-2">
+            <SidebarTrigger className="text-gray-600 dark:text-gray-400" />
+          </div>
 
-          <div className="flex items-center justify-between gap-5">
-            <ModeToggle />{" "}
+          <div className="flex items-center gap-4">
+            <ModeToggle />
             <Link
               href="/"
-              className="text-xl font-bold text-slate-900 dark:text-white"
+              className="text-lg font-medium text-gray-900 dark:text-white"
             >
-              Skill<span className="text-yellow-400">Bridge</span>
+              Skill<span className="text-yellow-500">Bridge</span>
             </Link>
           </div>
         </header>
 
-        <main className="flex flex-1 flex-col gap-4 p-4">
+        {/* Main Content */}
+        <main className="flex-1 p-6 bg-gray-50 dark:bg-gray-900">
           {user?.role === role.ADMIN
             ? admin
             : user?.role === role.TUTOR

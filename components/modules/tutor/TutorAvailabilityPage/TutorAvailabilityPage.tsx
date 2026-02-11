@@ -12,13 +12,17 @@ export default function TutorAvailabilityPage() {
 
   if (loading) {
     return (
-      <p className="text-gray-500 text-center mt-20">Loading session...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="w-8 h-8 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin" />
+      </div>
     );
   }
 
   if (!token) {
     return (
-      <p className="text-red-500 text-center mt-20">Unauthorized access</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <p className="text-red-500 dark:text-red-400">Unauthorized access</p>
+      </div>
     );
   }
 

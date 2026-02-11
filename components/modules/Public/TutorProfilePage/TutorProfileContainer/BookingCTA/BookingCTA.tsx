@@ -10,7 +10,7 @@ import {
 } from "@/services/booking/booking.service";
 
 interface Props {
-  tutorId: string; // backend tutorProfileId
+  tutorId: string;
   token: string | null;
   availability: TutorAvailability[];
 }
@@ -18,7 +18,7 @@ interface Props {
 export default function BookingCTA({ tutorId, token, availability }: Props) {
   const [booking, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState<string>("");
+  const [selectedSlot, setSelectedSlot] = useState("");
 
   const [slotOptions, setSlotOptions] = useState<
     { label: string; value: string }[]
@@ -30,12 +30,12 @@ export default function BookingCTA({ tutorId, token, availability }: Props) {
       .map((slot) => {
         if (!slot.startTime) return null;
         const start = new Date(slot.startTime);
-
-        // shift past slots to next week
         if (start <= now) start.setDate(start.getDate() + 7);
-
         return {
-          label: `${slot.day} ${start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`,
+          label: `${slot.day} • ${start.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`,
           value: start.toISOString(),
         };
       })
@@ -45,21 +45,18 @@ export default function BookingCTA({ tutorId, token, availability }: Props) {
   }, [availability]);
 
   const handleBooking = async () => {
-    if (!token) return toast.error("Please login to book this tutor");
-    if (!selectedSlot) return toast.error("Please select a slot");
+    if (!token) return toast.error("Please login to book");
+    if (!selectedSlot) return toast.error("Select a time slot");
 
     try {
       setLoading(true);
-
-      // Call booking service
       const data = await bookingService.createBooking(
         token,
         tutorId,
         selectedSlot,
       );
-
       setBooking(data);
-      toast.success("Booking confirmed 🎉");
+      toast.success("Booking confirmed!");
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message);
@@ -71,41 +68,52 @@ export default function BookingCTA({ tutorId, token, availability }: Props) {
     }
   };
 
-  return (
-    <div className="mt-6 flex flex-col gap-4">
-      {!booking && (
-        <select
-          value={selectedSlot}
-          onChange={(e) => setSelectedSlot(e.target.value)}
-          className="border border-gray-300 dark:border-gray-600 rounded-lg p-2 w-full max-w-xs
-            bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100
-            focus:outline-none focus:ring-2 focus:ring-yellow-400 dark:focus:ring-yellow-500 shadow-sm"
-        >
-          <option value="">Select an available slot</option>
-          {slotOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      )}
+  if (booking) {
+    return (
+      <Link
+        href="/dashboard/bookings"
+        className="inline-block px-5 py-2 text-sm font-medium
+                 bg-green-500 hover:bg-green-600
+                 text-white rounded-md
+                 transition-colors"
+      >
+        View Booking →
+      </Link>
+    );
+  }
 
-      {booking ? (
-        <Link
-          href={`/dashboard/bookings`}
-          className="inline-block bg-green-500 text-white px-8 py-3 rounded-xl font-semibold"
-        >
-          View Booking
-        </Link>
-      ) : (
-        <button
-          onClick={handleBooking}
-          disabled={loading || !selectedSlot}
-          className="bg-yellow-400 px-8 py-3 rounded-xl font-semibold hover:bg-yellow-500 transition w-full max-w-xs"
-        >
-          {loading ? "Booking..." : "Book Now"}
-        </button>
-      )}
+  return (
+    <div className="flex flex-col sm:flex-row gap-3">
+      <select
+        value={selectedSlot}
+        onChange={(e) => setSelectedSlot(e.target.value)}
+        className="px-3 py-2 text-sm
+                 bg-gray-50 dark:bg-gray-900
+                 border border-gray-200 dark:border-gray-800
+                 rounded-md
+                 focus:outline-none focus:border-yellow-500 
+                 focus:ring-1 focus:ring-yellow-500
+                 min-w-50"
+      >
+        <option value="">Select a slot</option>
+        {slotOptions.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+
+      <button
+        onClick={handleBooking}
+        disabled={loading || !selectedSlot}
+        className="px-5 py-2 text-sm font-medium
+                 bg-yellow-500 hover:bg-yellow-600
+                 text-white rounded-md
+                 disabled:opacity-50 disabled:cursor-not-allowed
+                 transition-colors"
+      >
+        {loading ? "Booking..." : "Book Now"}
+      </button>
     </div>
   );
 }

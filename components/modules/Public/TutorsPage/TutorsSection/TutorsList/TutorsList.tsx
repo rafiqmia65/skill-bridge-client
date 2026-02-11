@@ -1,83 +1,104 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { FiStar, FiBookOpen } from "react-icons/fi";
+import { FiStar } from "react-icons/fi";
 import { Tutor } from "@/services/tutor/tutor.service";
-
-interface Meta {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
 
 interface TutorsListProps {
   tutors: Tutor[];
-  meta: Meta;
 }
 
 export default function TutorsList({ tutors }: TutorsListProps) {
-  if (!tutors.length)
-    return <p className="text-center mt-10">No tutors found.</p>;
+  if (!tutors.length) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-600 dark:text-gray-400">No tutors found</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {tutors.map((tutor) => (
         <div
           key={tutor.id}
-          className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-yellow-400"
+          className="p-4 bg-white dark:bg-gray-900 
+                   rounded-lg border border-gray-200 dark:border-gray-800
+                   hover:border-yellow-500 transition-colors
+                   flex flex-col h-full"
         >
-          <div className="flex items-center gap-4">
+          {/* Profile */}
+          <div className="flex items-center gap-3 mb-3">
             {tutor.user.image ? (
-              <Image
-                src={tutor.user.image}
-                alt={tutor.user.name}
-                width={64}
-                height={64}
-                className="w-16 h-16 rounded-full object-cover border-2 border-yellow-400"
-              />
+              <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0">
+                <Image
+                  src={tutor.user.image}
+                  alt={tutor.user.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
             ) : (
-              <div className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-white font-bold text-xl">
-                {tutor.user.name[0]}
+              <div className="w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center shrink-0">
+                <span className="text-lg font-medium text-yellow-700 dark:text-yellow-400">
+                  {tutor.user.name[0]}
+                </span>
               </div>
             )}
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+            <div className="min-w-0 flex-1">
+              <h3 className="font-medium text-yellow-700 dark:text-yellow-500 truncate">
                 {tutor.user.name}
               </h3>
-              <p className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                <FiStar className="text-yellow-400" /> {tutor.rating.toFixed(1)}{" "}
-                • ${tutor.pricePerHr}/hr
-              </p>
+              <div className="flex items-center gap-1 text-xs text-gray-500">
+                <FiStar className="text-yellow-500" size={12} />
+                <span>{tutor.rating.toFixed(1)}</span>
+                <span>•</span>
+                <span>${tutor.pricePerHr}/hr</span>
+              </div>
             </div>
           </div>
 
+          {/* Bio */}
           {tutor.bio && (
-            <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-              {tutor.bio.length > 50
-                ? tutor.bio.slice(0, 50) + "..."
-                : tutor.bio}
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+              {tutor.bio}
             </p>
           )}
 
+          {/* Categories */}
           {tutor.categories && tutor.categories.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {tutor.categories.map((cat) => (
+            <div className="flex flex-wrap gap-1 mb-4">
+              {tutor.categories.slice(0, 2).map((cat) => (
                 <span
                   key={cat.id}
-                  className="flex items-center gap-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200 text-xs font-medium px-2 py-1 rounded-full"
+                  className="px-2 py-0.5 text-xs
+                           bg-gray-100 dark:bg-gray-800 
+                           text-gray-700 dark:text-gray-300
+                           rounded"
                 >
-                  <FiBookOpen size={14} /> {cat.name}
+                  {cat.name}
                 </span>
               ))}
+              {tutor.categories.length > 2 && (
+                <span className="px-2 py-0.5 text-xs text-gray-500">
+                  +{tutor.categories.length - 2}
+                </span>
+              )}
             </div>
           )}
 
-          <Link href={`/tutors/${tutor.id}`}>
-            <button className="mt-6 w-full rounded-lg bg-yellow-400 dark:bg-yellow-300 text-slate-900 font-semibold py-2 hover:bg-yellow-500 dark:hover:bg-yellow-400 transition shadow-md hover:shadow-lg">
+          {/* CTA */}
+          <div className="mt-auto">
+            <Link
+              href={`/tutors/${tutor.id}`}
+              className="block w-full py-2 text-sm font-medium text-center
+                       bg-yellow-500 hover:bg-yellow-600 
+                       text-white rounded
+                       transition-colors"
+            >
               View Profile
-            </button>
-          </Link>
+            </Link>
+          </div>
         </div>
       ))}
     </div>

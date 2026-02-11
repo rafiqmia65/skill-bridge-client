@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { tutorService, Category } from "@/services/tutor/tutor.service";
+import { tutorService } from "@/services/tutor/tutor.service";
+import { Category } from "@/types/admin";
 
 interface FiltersProps {
   onFilterChange: (filters: Record<string, string>) => void;
@@ -31,14 +32,12 @@ export default function Filters({ onFilterChange }: FiltersProps) {
   };
 
   return (
-    <div className="sticky top-20 p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-xl space-y-6 border border-gray-200 dark:border-gray-700">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-        Filters
-      </h3>
+    <div className="space-y-5">
+      <h3 className="font-medium text-gray-900 dark:text-white">Filters</h3>
 
       {/* Search */}
-      <div className="flex flex-col gap-2">
-        <label className="text-sm text-gray-600 dark:text-gray-400">
+      <div className="space-y-1.5">
+        <label className="text-xs text-gray-600 dark:text-gray-400">
           Search
         </label>
         <input
@@ -47,22 +46,32 @@ export default function Filters({ onFilterChange }: FiltersProps) {
           value={filters.search}
           onChange={handleChange}
           placeholder="Tutor name or subject"
-          className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+          className="w-full px-3 py-1.5 text-sm
+                   bg-gray-50 dark:bg-gray-900 
+                   border border-gray-200 dark:border-gray-800
+                   rounded-md
+                   focus:outline-none focus:border-yellow-500 
+                   focus:ring-1 focus:ring-yellow-500"
         />
       </div>
 
       {/* Category */}
-      <div className="flex flex-col gap-2">
-        <label className="text-sm text-gray-600 dark:text-gray-400">
+      <div className="space-y-1.5">
+        <label className="text-xs text-gray-600 dark:text-gray-400">
           Category
         </label>
         <select
           name="category"
           value={filters.category}
           onChange={handleChange}
-          className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+          className="w-full px-3 py-1.5 text-sm
+                   bg-gray-50 dark:bg-gray-900 
+                   border border-gray-200 dark:border-gray-800
+                   rounded-md
+                   focus:outline-none focus:border-yellow-500 
+                   focus:ring-1 focus:ring-yellow-500"
         >
-          <option value="">All</option>
+          <option value="">All Categories</option>
           {categories.map((cat) => (
             <option key={cat.id} value={cat.name}>
               {cat.name}
@@ -72,8 +81,8 @@ export default function Filters({ onFilterChange }: FiltersProps) {
       </div>
 
       {/* Price Range */}
-      <div className="flex flex-col gap-2">
-        <label className="text-sm text-gray-600 dark:text-gray-400">
+      <div className="space-y-1.5">
+        <label className="text-xs text-gray-600 dark:text-gray-400">
           Price Range
         </label>
         <div className="flex gap-2">
@@ -82,32 +91,47 @@ export default function Filters({ onFilterChange }: FiltersProps) {
             name="minPrice"
             value={filters.minPrice}
             onChange={handleChange}
-            placeholder="Min"
-            className="px-3 py-2 lg:w-6 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white flex-1"
+            placeholder="Min $"
+            className="w-full px-3 py-1.5 text-sm
+                     bg-gray-50 dark:bg-gray-900 
+                     border border-gray-200 dark:border-gray-800
+                     rounded-md
+                     focus:outline-none focus:border-yellow-500 
+                     focus:ring-1 focus:ring-yellow-500"
           />
           <input
             type="number"
             name="maxPrice"
             value={filters.maxPrice}
             onChange={handleChange}
-            placeholder="Max"
-            className="px-3 py-2 lg:w-6 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white flex-1"
+            placeholder="Max $"
+            className="w-full px-3 py-1.5 text-sm
+                     bg-gray-50 dark:bg-gray-900 
+                     border border-gray-200 dark:border-gray-800
+                     rounded-md
+                     focus:outline-none focus:border-yellow-500 
+                     focus:ring-1 focus:ring-yellow-500"
           />
         </div>
       </div>
 
       {/* Rating */}
-      <div className="flex flex-col gap-2">
-        <label className="text-sm text-gray-600 dark:text-gray-400">
+      <div className="space-y-1.5">
+        <label className="text-xs text-gray-600 dark:text-gray-400">
           Rating
         </label>
         <select
           name="rating"
           value={filters.rating}
           onChange={handleChange}
-          className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
+          className="w-full px-3 py-1.5 text-sm
+                   bg-gray-50 dark:bg-gray-900 
+                   border border-gray-200 dark:border-gray-800
+                   rounded-md
+                   focus:outline-none focus:border-yellow-500 
+                   focus:ring-1 focus:ring-yellow-500"
         >
-          <option value="">Any</option>
+          <option value="">Any Rating</option>
           <option value="5">5★</option>
           <option value="4">4★ & above</option>
           <option value="3">3★ & above</option>

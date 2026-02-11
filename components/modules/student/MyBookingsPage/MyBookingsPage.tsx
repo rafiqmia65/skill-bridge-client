@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { bookingService, Booking } from "@/services/booking/booking.service";
 import { authClient } from "@/lib/auth-client";
 import BookingsTable from "./BookingsTable/BookingsTable";
+import { FiCalendar } from "react-icons/fi";
 
 const MyBookingsPage: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -16,7 +17,7 @@ const MyBookingsPage: React.FC = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       if (!token) {
-        toast.error("You must be logged in to view bookings");
+        toast.error("Please login to view bookings");
         return;
       }
 
@@ -36,10 +37,32 @@ const MyBookingsPage: React.FC = () => {
   }, [token]);
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6">My Bookings</h1>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-md">
+          <FiCalendar
+            className="text-yellow-600 dark:text-yellow-400"
+            size={20}
+          />
+        </div>
+        <div>
+          <h1 className="text-2xl font-medium text-gray-900 dark:text-white">
+            My Bookings
+          </h1>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Manage your tutoring sessions
+          </p>
+        </div>
+      </div>
+
+      {/* Content */}
       {loading ? (
-        <p>Loading your bookings...</p>
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8">
+          <div className="flex justify-center">
+            <div className="w-8 h-8 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin" />
+          </div>
+        </div>
       ) : (
         <BookingsTable bookings={bookings} />
       )}

@@ -6,14 +6,13 @@ import {
   studentProfileService,
 } from "@/services/student/StudentProfileService";
 import Image from "next/image";
-import { User, Mail, Image as ImageIcon, Save, Loader2 } from "lucide-react";
+import { FiUser, FiMail, FiImage, FiSave, FiCamera } from "react-icons/fi";
 import toast from "react-hot-toast";
 
 interface Props {
   token: string;
 }
 
-// Extend the StudentProfilePayload to include createdAt if needed
 interface ExtendedStudentProfilePayload extends StudentProfilePayload {
   createdAt?: string;
 }
@@ -74,258 +73,325 @@ export default function StudentProfileForm({ token }: Props) {
     }
   };
 
+  const handleReset = () => {
+    setFormData({
+      name: profile?.name || "",
+      email: profile?.email || "",
+      image: profile?.image || "",
+    });
+    toast.success("Changes reset");
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-blue-600 dark:text-blue-400 mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-300 text-lg font-medium">
-            Loading your profile...
-          </p>
+      <div className="space-y-6 animate-pulse">
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
+          <div className="flex items-center gap-4">
+            <div className="w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-800" />
+            <div className="flex-1 space-y-2">
+              <div className="h-5 bg-gray-200 dark:bg-gray-800 rounded w-1/4" />
+              <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/3" />
+            </div>
+          </div>
+        </div>
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
+          <div className="space-y-4">
+            <div className="h-10 bg-gray-200 dark:bg-gray-800 rounded" />
+            <div className="h-10 bg-gray-200 dark:bg-gray-800 rounded" />
+            <div className="h-10 bg-gray-200 dark:bg-gray-800 rounded" />
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-12 px-4 md:px-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-md">
+          <FiUser className="text-yellow-600 dark:text-yellow-400" size={20} />
+        </div>
+        <div>
+          <h1 className="text-2xl font-medium text-gray-900 dark:text-white">
             Student Profile
           </h1>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             Manage your personal information and account settings
           </p>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Profile Card - Left Column */}
-          <div className="lg:col-span-1 space-y-8">
-            {/* Profile Summary Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl border border-gray-100 dark:border-gray-700">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Profile Summary */}
+        <div className="lg:col-span-1 space-y-6">
+          {/* Profile Card */}
+          <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <div className="p-6">
               <div className="flex flex-col items-center text-center">
-                <div className="relative mb-6">
+                {/* Avatar */}
+                <div className="relative mb-4">
                   {profile?.image ? (
-                    <div className="relative w-36 h-36 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg">
+                    <div className="relative w-28 h-28 rounded-full overflow-hidden border-2 border-yellow-500">
                       <Image
                         src={profile.image}
                         alt="Profile"
-                        width={144}
-                        height={144}
-                        className="object-cover w-full h-full"
+                        fill
+                        className="object-cover"
                       />
                     </div>
                   ) : (
-                    <div className="w-36 h-36 rounded-full bg-linear-to-br from-blue-100 to-indigo-100 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center shadow-lg">
-                      <User className="w-16 h-16 text-blue-600 dark:text-blue-400" />
+                    <div className="w-28 h-28 rounded-full bg-linear-to-br from-yellow-400 to-yellow-500 flex items-center justify-center border-2 border-yellow-500">
+                      <span className="text-3xl font-medium text-white">
+                        {profile?.name?.charAt(0).toUpperCase() || "S"}
+                      </span>
                     </div>
                   )}
-                  <div className="absolute -bottom-2 -right-2 bg-blue-600 dark:bg-blue-500 text-white p-3 rounded-full shadow-lg">
-                    <User className="w-5 h-5" />
-                  </div>
+                  <button className="absolute -bottom-1 -right-1 p-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-full border-2 border-white dark:border-gray-900 transition-colors">
+                    <FiCamera size={14} />
+                  </button>
                 </div>
 
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                  {profile?.name || "No Name Provided"}
+                {/* Info */}
+                <h2 className="text-xl font-medium text-gray-900 dark:text-white mb-1">
+                  {profile?.name || "No Name"}
                 </h2>
-                <div className="flex items-center justify-center gap-2 text-gray-600 dark:text-gray-300 mb-4">
-                  <Mail className="w-4 h-4" />
-                  <p className="text-sm md:text-base">{profile?.email}</p>
+                <div className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 mb-3">
+                  <FiMail size={14} />
+                  <span className="truncate">{profile?.email}</span>
                 </div>
 
-                <div className="w-full pt-6 border-t border-gray-100 dark:border-gray-700">
-                  <div className="flex justify-between mb-3">
-                    <span className="text-gray-500 dark:text-gray-400">
+                {/* Status */}
+                <div className="w-full pt-4 mt-2 border-t border-gray-200 dark:border-gray-800">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500 dark:text-gray-500">
                       Status
                     </span>
-                    <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-full text-sm font-medium">
+                    <span className="inline-flex px-2 py-1 text-xs font-medium rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
                       Active
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">
-                      Member Since
-                    </span>
-                    <span className="text-gray-900 dark:text-gray-200">
-                      {profile?.createdAt
-                        ? new Date(profile.createdAt).toLocaleDateString()
-                        : "N/A"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Image URL Help Card */}
-            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-6 border border-blue-100 dark:border-blue-800">
-              <div className="flex items-start gap-3 mb-4">
-                <ImageIcon className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-blue-900 dark:text-blue-300 mb-1">
-                    Profile Image Tips
-                  </h3>
-                  <p className="text-sm text-blue-700 dark:text-blue-400">
-                    Use a direct image URL from services like Imgur, Cloudinary,
-                    or GitHub. Ensure the image is square (1:1 ratio) for best
-                    results.
-                  </p>
+                  {profile?.createdAt && (
+                    <div className="flex justify-between items-center mt-2">
+                      <span className="text-xs text-gray-500 dark:text-gray-500">
+                        Member Since
+                      </span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">
+                        {new Date(profile.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            year: "numeric",
+                          },
+                        )}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Edit Form - Right Column */}
-          <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-all duration-300 border border-gray-100 dark:border-gray-700">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="p-3 rounded-xl bg-blue-100 dark:bg-blue-900/30">
-                  <User className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Edit Profile Information
-                  </h2>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    Update your personal details and account preferences
-                  </p>
+          {/* Tips Card */}
+          <div className="bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-900 p-5">
+            <div className="flex gap-3">
+              <FiImage
+                className="text-blue-600 dark:text-blue-400 shrink-0 mt-0.5"
+                size={18}
+              />
+              <div>
+                <h3 className="text-sm font-medium text-blue-800 dark:text-blue-300 mb-1">
+                  Profile Image Tips
+                </h3>
+                <p className="text-xs text-blue-700 dark:text-blue-400 leading-relaxed">
+                  Use a square image URL from Imgur, Cloudinary, or GitHub for
+                  best results.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column - Edit Form */}
+        <div className="lg:col-span-2">
+          <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+            {/* Form Header */}
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+              <div className="flex items-center gap-2">
+                <FiUser
+                  className="text-gray-500 dark:text-gray-400"
+                  size={16}
+                />
+                <h2 className="font-medium text-gray-900 dark:text-white">
+                  Edit Profile Information
+                </h2>
+              </div>
+            </div>
+
+            {/* Form Body */}
+            <form onSubmit={handleSubmit} className="p-6 space-y-5">
+              {/* Name Field */}
+              <div className="space-y-1.5">
+                <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 dark:text-gray-300">
+                  <FiUser size={12} />
+                  Full Name
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name || ""}
+                    onChange={handleChange}
+                    placeholder="Enter your full name"
+                    className="w-full px-3 py-2 pl-9 text-sm
+                             bg-gray-50 dark:bg-gray-900 
+                             border border-gray-200 dark:border-gray-800
+                             rounded-md
+                             focus:outline-none focus:border-yellow-500 
+                             focus:ring-1 focus:ring-yellow-500
+                             transition-colors"
+                  />
+                  <FiUser
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    size={14}
+                  />
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Name Field */}
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300 font-medium">
-                    <User className="w-4 h-4" />
-                    Full Name
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name || ""}
-                      onChange={handleChange}
-                      className="w-full p-4 pl-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all duration-200"
-                      placeholder="Enter your full name"
-                    />
-                    <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  </div>
+              {/* Email Field */}
+              <div className="space-y-1.5">
+                <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 dark:text-gray-300">
+                  <FiMail size={12} />
+                  Email Address
+                </label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email || ""}
+                    onChange={handleChange}
+                    placeholder="Enter your email address"
+                    className="w-full px-3 py-2 pl-9 text-sm
+                             bg-gray-50 dark:bg-gray-900 
+                             border border-gray-200 dark:border-gray-800
+                             rounded-md
+                             focus:outline-none focus:border-yellow-500 
+                             focus:ring-1 focus:ring-yellow-500
+                             transition-colors"
+                  />
+                  <FiMail
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    size={14}
+                  />
                 </div>
+              </div>
 
-                {/* Email Field */}
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300 font-medium">
-                    <Mail className="w-4 h-4" />
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email || ""}
-                      onChange={handleChange}
-                      className="w-full p-4 pl-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all duration-200"
-                      placeholder="Enter your email address"
-                    />
-                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  </div>
+              {/* Image URL Field */}
+              <div className="space-y-1.5">
+                <label className="flex items-center gap-1.5 text-xs font-medium text-gray-700 dark:text-gray-300">
+                  <FiImage size={12} />
+                  Profile Image URL
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    name="image"
+                    value={formData.image || ""}
+                    onChange={handleChange}
+                    placeholder="https://example.com/image.jpg"
+                    className="w-full px-3 py-2 pl-9 text-sm
+                             bg-gray-50 dark:bg-gray-900 
+                             border border-gray-200 dark:border-gray-800
+                             rounded-md
+                             focus:outline-none focus:border-yellow-500 
+                             focus:ring-1 focus:ring-yellow-500
+                             transition-colors"
+                  />
+                  <FiImage
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    size={14}
+                  />
                 </div>
+              </div>
 
-                {/* Image URL Field */}
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-gray-700 dark:text-gray-300 font-medium">
-                    <ImageIcon className="w-4 h-4" />
-                    Profile Image URL
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      name="image"
-                      value={formData.image || ""}
-                      onChange={handleChange}
-                      className="w-full p-4 pl-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all duration-200"
-                      placeholder="https://example.com/your-image.jpg"
-                    />
-                    <ImageIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="pt-6 border-t border-gray-100 dark:border-gray-700 flex flex-col sm:flex-row gap-4">
-                  <button
-                    type="submit"
-                    disabled={saving}
-                    className="flex-1 py-4 bg-linear-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 dark:hover:from-blue-600 dark:hover:to-indigo-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3"
-                  >
-                    {saving ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        Saving Changes...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-5 h-5" />
-                        Update Profile
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFormData({
-                        name: profile?.name || "",
-                        email: profile?.email || "",
-                        image: profile?.image || "",
-                      });
-                    }}
-                    className="py-4 px-8 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300"
-                  >
-                    Reset Changes
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            {/* Current Image Preview */}
-            {formData.image && (
-              <div className="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Image Preview
-                </h3>
-                <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                  <div className="w-24 h-24 rounded-xl overflow-hidden border-2 border-gray-200 dark:border-gray-700">
-                    <div className="relative w-full h-full bg-gray-100 dark:bg-gray-900">
+              {/* Image Preview */}
+              {formData.image && (
+                <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-md border border-gray-200 dark:border-gray-800">
+                  <div className="flex items-start gap-4">
+                    <div className="relative w-16 h-16 rounded-md overflow-hidden border border-gray-200 dark:border-gray-700">
                       <Image
                         src={formData.image}
                         alt="Preview"
-                        width={96}
-                        height={96}
-                        className="object-cover w-full h-full"
+                        fill
+                        className="object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = "none";
+                        }}
                       />
                     </div>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-600 dark:text-gray-300 break-all">
-                      {formData.image}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      This is how your profile image will appear
-                    </p>
+                    <div className="flex-1">
+                      <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Image Preview
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-500 break-all">
+                        {formData.image}
+                      </p>
+                    </div>
                   </div>
                 </div>
+              )}
+
+              {/* Form Actions */}
+              <div className="flex items-center gap-3 pt-4 border-t border-gray-200 dark:border-gray-800">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium
+                           bg-yellow-500 hover:bg-yellow-600
+                           text-white rounded-md
+                           disabled:opacity-50 disabled:cursor-not-allowed
+                           transition-colors"
+                >
+                  {saving ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <FiSave size={14} />
+                      Update Profile
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="px-4 py-2 text-sm font-medium
+                           text-gray-700 dark:text-gray-300
+                           bg-gray-100 dark:bg-gray-800
+                           hover:bg-gray-200 dark:hover:bg-gray-700
+                           rounded-md transition-colors"
+                >
+                  Reset
+                </button>
               </div>
-            )}
+            </form>
           </div>
         </div>
+      </div>
 
-        {/* Footer Note */}
-        <div className="mt-12 text-center">
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
-            Last updated: {new Date().toLocaleDateString()}
-          </p>
-        </div>
+      {/* Footer */}
+      <div className="text-center pt-4">
+        <p className="text-xs text-gray-500 dark:text-gray-500">
+          Last updated:{" "}
+          {new Date().toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </p>
       </div>
     </div>
   );

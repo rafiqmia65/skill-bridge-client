@@ -13,18 +13,16 @@ export default function Pagination({
 }: PaginationProps) {
   if (totalPages <= 1) return null;
 
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-
   return (
-    <div className="mt-10 flex justify-center gap-2">
-      {pages.map((p) => (
+    <div className="mt-10 flex justify-center gap-1.5">
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
         <button
           key={p}
           onClick={() => onPageChange(p)}
-          className={`px-4 py-2 rounded-lg border ${
+          className={`min-w-8 h-8 text-sm rounded-md transition-colors ${
             p === page
-              ? "bg-yellow-400 text-white border-yellow-400"
-              : "bg-white dark:bg-slate-900 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-700"
+              ? "bg-yellow-500 text-white"
+              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
           }`}
         >
           {p}

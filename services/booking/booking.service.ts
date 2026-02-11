@@ -9,6 +9,19 @@ export interface Category {
   id: string;
   name: string;
 }
+export interface Tutor {
+  id: string;
+  user: {
+    name: string;
+    image?: string | null;
+  };
+  rating: number;
+  pricePerHr?: number;
+  bio?: string;
+
+  categories?: Category[];
+  availability?: TutorAvailability[];
+}
 
 export interface TutorAvailability {
   day: string;

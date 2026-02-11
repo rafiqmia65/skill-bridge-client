@@ -18,12 +18,6 @@ export default function Footer() {
           <Link href="/tutors" className="hover:text-yellow-400 transition">
             Tutors
           </Link>
-          <Link href="/login" className="hover:text-yellow-400 transition">
-            Login
-          </Link>
-          <Link href="/register" className="hover:text-yellow-400 transition">
-            Register
-          </Link>
         </div>
 
         {/* Copyright */}
