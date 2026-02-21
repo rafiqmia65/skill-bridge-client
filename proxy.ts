@@ -1,3 +1,4 @@
+// middleware/proxy.ts
 import { NextRequest, NextResponse } from "next/server";
 
 export async function proxy(request: NextRequest) {
@@ -9,14 +10,15 @@ export async function proxy(request: NextRequest) {
   }
 
   // Check for session token in cookies
-  const sessionToken = request.cookies.get("better-auth.session_token");
+  // Production cookie has __Secure prefix
+  const sessionToken =
+    request.cookies.get("better-auth.session_token")?.value ||
+    request.cookies.get("__Secure-better-auth.session_token")?.value;
 
-  //* User is not authenticated at all
   if (!sessionToken) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Allow access if session exists
   return NextResponse.next();
 }
 

@@ -146,36 +146,6 @@ export default async function FeaturedTutors() {
             100+ qualified tutors available
           </p>
         </div>
-
-        {/* Simple Stats */}
-        <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-800">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
-            <div className="text-gray-600 dark:text-gray-400">
-              <span className="block font-medium text-gray-900 dark:text-white text-base">
-                100+
-              </span>
-              Tutors
-            </div>
-            <div className="text-gray-600 dark:text-gray-400">
-              <span className="block font-medium text-gray-900 dark:text-white text-base">
-                4.9
-              </span>
-              Rating
-            </div>
-            <div className="text-gray-600 dark:text-gray-400">
-              <span className="block font-medium text-gray-900 dark:text-white text-base">
-                95%
-              </span>
-              Success
-            </div>
-            <div className="text-gray-600 dark:text-gray-400">
-              <span className="block font-medium text-gray-900 dark:text-white text-base">
-                24/7
-              </span>
-              Support
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

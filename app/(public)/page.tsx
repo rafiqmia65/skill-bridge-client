@@ -6,8 +6,8 @@ export default async function Home() {
   return (
     <div>
       <HeroSection />
-      <SearchBar />
       <FeaturedTutors />
+      <SearchBar />
     </div>
   );
 }
